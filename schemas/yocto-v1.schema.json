@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$comment": "SPDX-License-Identifier: Apache-2.0",
+  "type": "object",
+  "properties": {
+    "version": {
+      "const": "1"
+    },
+    "package": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "layer": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "version": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "issue": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^CVE-[0-9]{4}-[0-9]{4,}$"
+                },
+                "status": {
+                  "enum": [
+                    "Patched",
+                    "Unpatched",
+                    "Ignored"
+                  ]
+                },
+                "detail": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "summary": {
+                  "type": "string"
+                },
+                "link": {
+                  "type": "string"
+                },
+                "modified": {
+                  "type": "string"
+                },
+                "scorev2": {
+                  "type": "string"
+                },
+                "scorev3": {
+                  "type": "string"
+                },
+                "scorev4": {
+                  "type": "string"
+                },
+                "vector": {
+                  "type": "string"
+                },
+                "vectorString": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "status"
+              ],
+              "additionalProperties": true
+            }
+          }
+        },
+        "required": [
+          "name",
+          "layer",
+          "version",
+          "issue"
+        ],
+        "additionalProperties": true
+      },
+      "maxItems": 100000
+    }
+  },
+  "required": [
+    "version",
+    "package"
+  ],
+  "additionalProperties": true
+}

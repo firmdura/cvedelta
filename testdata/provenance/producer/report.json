@@ -1,0 +1,59 @@
+{
+  "version": "1",
+  "package": [
+    {
+      "name": "cvedelta-fixture",
+      "layer": "meta",
+      "version": "1.0",
+      "products": [
+        {
+          "product": "cvedelta-fixture",
+          "cvesInRecord": "Yes"
+        },
+        {
+          "product": "fixture-without-records",
+          "cvesInRecord": "No"
+        }
+      ],
+      "issue": [
+        {
+          "id": "CVE-2099-0001",
+          "summary": "Original synthetic fixture record one; no vulnerability claim.",
+          "scorev2": "0.0",
+          "scorev3": "0.0",
+          "scorev4": "0.0",
+          "vector": "LOCAL",
+          "vectorString": "fixture-vector-one",
+          "status": "Patched",
+          "link": "https://nvd.nist.gov/vuln/detail/CVE-2099-0001",
+          "detail": "fixed-version",
+          "description": "Original fixture claim only"
+        },
+        {
+          "id": "CVE-2099-0002",
+          "summary": "Original synthetic fixture record two; no vulnerability claim.",
+          "scorev2": "0.0",
+          "scorev3": "0.0",
+          "scorev4": "0.0",
+          "vector": "NETWORK",
+          "vectorString": "fixture-vector-two",
+          "status": "Unpatched",
+          "link": "https://nvd.nist.gov/vuln/detail/CVE-2099-0002"
+        },
+        {
+          "id": "CVE-2099-0003",
+          "summary": "Original synthetic fixture record three; no vulnerability claim.",
+          "scorev2": "0.0",
+          "scorev3": "0.0",
+          "scorev4": "0.0",
+          "vector": "LOCAL",
+          "vectorString": "fixture-vector-three",
+          "status": "Ignored",
+          "link": "https://nvd.nist.gov/vuln/detail/CVE-2099-0003",
+          "detail": "not-applicable-platform",
+          "description": "Original fixture says \"different platform\"\nSecond line."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,238 @@
+{
+  "schema_version": 1,
+  "baseline": {
+    "schema_version": 1,
+    "report_sha256": "4c31bd2d6800d5bbbfe83bc9f32a15d1a1513778eb11d584e79d3d276da4016b",
+    "firmware": {
+      "configuration_id": "fixture:machine:distro",
+      "build_id": "baseline",
+      "source_revision": "original-synthetic-baseline"
+    },
+    "scanner": {
+      "name": "yocto-cve-check",
+      "revision": "original-synthetic-producer-v1"
+    },
+    "database": {
+      "sha256": "9d3d2c3b36e1fb4f8d9d00d12868fe09fe2a9e7d84c1463c317eb5c3733d53d0"
+    },
+    "coverage": {
+      "scope_sha256": "5956c99a3a27507eec704e4a776e1732493363a85fdda67c0aeeece21df79789",
+      "complete": true
+    }
+  },
+  "candidate": {
+    "schema_version": 1,
+    "report_sha256": "4c31bd2d6800d5bbbfe83bc9f32a15d1a1513778eb11d584e79d3d276da4016b",
+    "firmware": {
+      "configuration_id": "fixture:machine:distro",
+      "build_id": "baseline",
+      "source_revision": "original-synthetic-baseline"
+    },
+    "scanner": {
+      "name": "yocto-cve-check",
+      "revision": "original-synthetic-producer-v1"
+    },
+    "database": {
+      "sha256": "9d3d2c3b36e1fb4f8d9d00d12868fe09fe2a9e7d84c1463c317eb5c3733d53d0"
+    },
+    "coverage": {
+      "scope_sha256": "5956c99a3a27507eec704e4a776e1732493363a85fdda67c0aeeece21df79789",
+      "complete": true
+    }
+  },
+  "comparable": true,
+  "reasons": [],
+  "records": [
+    {
+      "component": {
+        "layer": "meta",
+        "name": "alpha"
+      },
+      "cve_id": "CVE-2099-0001",
+      "category": "unchanged",
+      "before": {
+        "version": "1.0",
+        "status": "Unpatched",
+        "attributes": {
+          "detail": "old reported reason"
+        }
+      },
+      "after": {
+        "version": "1.0",
+        "status": "Unpatched",
+        "attributes": {
+          "detail": "old reported reason"
+        }
+      },
+      "absence_reason": null,
+      "changed_fields": []
+    },
+    {
+      "component": {
+        "layer": "meta",
+        "name": "alpha"
+      },
+      "cve_id": "CVE-2099-0003",
+      "category": "unchanged",
+      "before": {
+        "version": "1.0",
+        "status": "Patched",
+        "attributes": {}
+      },
+      "after": {
+        "version": "1.0",
+        "status": "Patched",
+        "attributes": {}
+      },
+      "absence_reason": null,
+      "changed_fields": []
+    },
+    {
+      "component": {
+        "layer": "meta",
+        "name": "alpha"
+      },
+      "cve_id": "CVE-2099-0005",
+      "category": "unchanged",
+      "before": {
+        "version": "1.0",
+        "status": "Unpatched",
+        "attributes": {
+          "summary": "same text"
+        }
+      },
+      "after": {
+        "version": "1.0",
+        "status": "Unpatched",
+        "attributes": {
+          "summary": "same text"
+        }
+      },
+      "absence_reason": null,
+      "changed_fields": []
+    },
+    {
+      "component": {
+        "layer": "meta",
+        "name": "alpha-native"
+      },
+      "cve_id": "CVE-2099-0001",
+      "category": "unchanged",
+      "before": {
+        "version": "1.0",
+        "status": "Unpatched",
+        "attributes": {}
+      },
+      "after": {
+        "version": "1.0",
+        "status": "Unpatched",
+        "attributes": {}
+      },
+      "absence_reason": null,
+      "changed_fields": []
+    },
+    {
+      "component": {
+        "layer": "meta",
+        "name": "gone"
+      },
+      "cve_id": "CVE-2099-0001",
+      "category": "unchanged",
+      "before": {
+        "version": "1.0",
+        "status": "Patched",
+        "attributes": {}
+      },
+      "after": {
+        "version": "1.0",
+        "status": "Patched",
+        "attributes": {}
+      },
+      "absence_reason": null,
+      "changed_fields": []
+    },
+    {
+      "component": {
+        "layer": "meta",
+        "name": "lib32-alpha"
+      },
+      "cve_id": "CVE-2099-0001",
+      "category": "unchanged",
+      "before": {
+        "version": "1.0",
+        "status": "Unpatched",
+        "attributes": {}
+      },
+      "after": {
+        "version": "1.0",
+        "status": "Unpatched",
+        "attributes": {}
+      },
+      "absence_reason": null,
+      "changed_fields": []
+    },
+    {
+      "component": {
+        "layer": "meta",
+        "name": "stable"
+      },
+      "cve_id": "CVE-2099-0001",
+      "category": "unchanged",
+      "before": {
+        "version": "1.0",
+        "status": "Ignored",
+        "attributes": {
+          "description": "Source claim only.",
+          "link": "https://example.invalid/\u003cscript\u003e|`link`"
+        }
+      },
+      "after": {
+        "version": "1.0",
+        "status": "Ignored",
+        "attributes": {
+          "description": "Source claim only.",
+          "link": "https://example.invalid/\u003cscript\u003e|`link`"
+        }
+      },
+      "absence_reason": null,
+      "changed_fields": []
+    },
+    {
+      "component": {
+        "layer": "meta",
+        "name": "stable"
+      },
+      "cve_id": "CVE-2099-0002",
+      "category": "unchanged",
+      "before": {
+        "version": "1.0",
+        "status": "Unpatched",
+        "attributes": {}
+      },
+      "after": {
+        "version": "1.0",
+        "status": "Unpatched",
+        "attributes": {}
+      },
+      "absence_reason": null,
+      "changed_fields": []
+    }
+  ],
+  "counts": {
+    "new": 0,
+    "no_longer_reported": 0,
+    "status_changed": 0,
+    "context_changed": 0,
+    "unchanged": 8
+  },
+  "component_version_changes": [],
+  "policy": {
+    "fail_on": [
+      "new",
+      "no_longer_reported",
+      "status_changed",
+      "context_changed"
+    ]
+  },
+  "decision": "clean"
+}

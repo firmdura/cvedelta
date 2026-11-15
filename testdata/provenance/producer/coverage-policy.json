@@ -1,0 +1,10 @@
+{
+  "purpose": "Synthetic fixture writer invocation, not a firmware scan",
+  "recipes": ["cvedelta-fixture"],
+  "include_layers": [],
+  "exclude_layers": [],
+  "skip_recipes": [],
+  "report_patched": true,
+  "report_ignored": true,
+  "database_input": "database.json"
+}

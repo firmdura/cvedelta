@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$comment": "SPDX-License-Identifier: Apache-2.0",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "report_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "firmware": {
+      "type": "object",
+      "properties": {
+        "configuration_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "build_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "source_revision": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        }
+      },
+      "required": [
+        "configuration_id",
+        "build_id",
+        "source_revision"
+      ],
+      "additionalProperties": false
+    },
+    "scanner": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "const": "yocto-cve-check"
+        },
+        "revision": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        }
+      },
+      "required": [
+        "name",
+        "revision"
+      ],
+      "additionalProperties": false
+    },
+    "database": {
+      "type": "object",
+      "properties": {
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "sha256"
+      ],
+      "additionalProperties": false
+    },
+    "coverage": {
+      "type": "object",
+      "properties": {
+        "scope_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "complete": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "scope_sha256",
+        "complete"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "schema_version",
+    "report_sha256",
+    "firmware",
+    "scanner",
+    "database",
+    "coverage"
+  ],
+  "additionalProperties": false
+}

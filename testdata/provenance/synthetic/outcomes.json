@@ -1,0 +1,36 @@
+{
+  "cases": [
+    {
+      "name": "default selected changes",
+      "baseline_meta": "baseline.meta.json",
+      "candidate_meta": "candidate.meta.json",
+      "fail_on": null,
+      "expected_exit": 1,
+      "report": "report-changes.json"
+    },
+    {
+      "name": "none disables change gating",
+      "baseline_meta": "baseline.meta.json",
+      "candidate_meta": "candidate.meta.json",
+      "fail_on": [],
+      "expected_exit": 0,
+      "report": "report-none.json"
+    },
+    {
+      "name": "configuration mismatch precedes policy",
+      "baseline_meta": "baseline.meta.json",
+      "candidate_meta": "configuration-mismatch.meta.json",
+      "fail_on": [],
+      "expected_exit": 2,
+      "report": null
+    },
+    {
+      "name": "incomparable precedes none",
+      "baseline_meta": "baseline-incomplete.meta.json",
+      "candidate_meta": "all-incomparable.meta.json",
+      "fail_on": [],
+      "expected_exit": 3,
+      "report": "report-incomparable.json"
+    }
+  ]
+}

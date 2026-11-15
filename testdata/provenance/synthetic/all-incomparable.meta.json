@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "report_sha256": "12ea1dbdb9f45256c5b4a5183a49a4ba5277f55150aa6a81677eed898f6340ce",
+  "firmware": {
+    "configuration_id": "fixture:machine:distro",
+    "build_id": "candidate",
+    "source_revision": "original-synthetic-candidate"
+  },
+  "scanner": {
+    "name": "yocto-cve-check",
+    "revision": "other-synthetic-producer"
+  },
+  "database": {
+    "sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+  },
+  "coverage": {
+    "scope_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "complete": false
+  }
+}

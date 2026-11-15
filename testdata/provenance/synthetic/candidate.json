@@ -1,0 +1,83 @@
+{
+  "version": "1",
+  "package": [
+    {
+      "name": "alpha",
+      "layer": "meta",
+      "version": "2.0",
+      "issue": [
+        {
+          "id": "CVE-2099-0001",
+          "status": "Patched",
+          "detail": "reported \"new\" reason\nsecond line"
+        },
+        {
+          "id": "CVE-2099-0004",
+          "status": "Unpatched"
+        },
+        {
+          "id": "CVE-2099-0005",
+          "status": "Unpatched",
+          "summary": "same text"
+        }
+      ]
+    },
+    {
+      "name": "stable",
+      "layer": "meta",
+      "version": "1.0",
+      "issue": [
+        {
+          "id": "CVE-2099-0001",
+          "status": "Ignored",
+          "description": "Source claim only.",
+          "link": "https://example.invalid/<script>|`link`"
+        },
+        {
+          "id": "CVE-2099-0002",
+          "status": "Unpatched",
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "name": "added",
+      "layer": "meta",
+      "version": "1.0",
+      "issue": [
+        {
+          "id": "CVE-2099-0001",
+          "status": "Unpatched"
+        }
+      ]
+    },
+    {
+      "name": "alpha-native",
+      "layer": "meta",
+      "version": "1.0",
+      "issue": [
+        {
+          "id": "CVE-2099-0001",
+          "status": "Unpatched"
+        }
+      ]
+    },
+    {
+      "name": "lib32-alpha",
+      "layer": "meta",
+      "version": "1.0",
+      "issue": [
+        {
+          "id": "CVE-2099-0001",
+          "status": "Unpatched"
+        }
+      ]
+    },
+    {
+      "name": "empty",
+      "layer": "meta",
+      "version": "2.0",
+      "issue": []
+    }
+  ]
+}

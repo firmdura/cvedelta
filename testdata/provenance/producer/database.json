@@ -1,0 +1,26 @@
+{
+  "CVE-2099-0001": {
+    "summary": "Original synthetic fixture record one; no vulnerability claim.",
+    "scorev2": "0.0",
+    "scorev3": "0.0",
+    "scorev4": "0.0",
+    "vector": "LOCAL",
+    "vectorString": "fixture-vector-one"
+  },
+  "CVE-2099-0002": {
+    "summary": "Original synthetic fixture record two; no vulnerability claim.",
+    "scorev2": "0.0",
+    "scorev3": "0.0",
+    "scorev4": "0.0",
+    "vector": "NETWORK",
+    "vectorString": "fixture-vector-two"
+  },
+  "CVE-2099-0003": {
+    "summary": "Original synthetic fixture record three; no vulnerability claim.",
+    "scorev2": "0.0",
+    "scorev3": "0.0",
+    "scorev4": "0.0",
+    "vector": "LOCAL",
+    "vectorString": "fixture-vector-three"
+  }
+}

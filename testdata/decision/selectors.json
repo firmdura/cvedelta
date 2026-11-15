@@ -1,0 +1,21 @@
+{
+  "valid": [
+    {"value": "none", "want": []},
+    {"value": "new", "want": ["new"]},
+    {"value": "no_longer_reported", "want": ["no_longer_reported"]},
+    {"value": "status_changed", "want": ["status_changed"]},
+    {"value": "context_changed", "want": ["context_changed"]},
+    {"value": "context_changed,new", "want": ["new", "context_changed"]},
+    {"value": "status_changed,no_longer_reported", "want": ["no_longer_reported", "status_changed"]},
+    {"value": "context_changed,status_changed,no_longer_reported,new", "want": ["new", "no_longer_reported", "status_changed", "context_changed"]}
+  ],
+  "invalid": [
+    "", ",", "new,", ",new", "new,,status_changed",
+    "unknown", "unchanged", "new,unchanged", "new,unknown",
+    "new,new", "new,status_changed,new", "none,none",
+    "none,new", "new,none", "context_changed,none,new",
+    "New", "NONE", " new", "new ", "new, status_changed",
+    "new,\tstatus_changed", "new\n", "none ", " none",
+    "new\u0000", "new;status_changed", "new|status_changed"
+  ]
+}

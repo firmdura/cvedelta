@@ -1,0 +1,27 @@
+{
+  "recipe": {
+    "PN": "cvedelta-fixture",
+    "PV": "1.0",
+    "EXTENDPE": "",
+    "FILE_DIRNAME": "/fixture/meta/recipes-test/cvedelta-fixture",
+    "CVE_CHECK_LAYER_INCLUDELIST": "",
+    "CVE_CHECK_LAYER_EXCLUDELIST": "",
+    "CVE_CHECK_REPORT_PATCHED": "1",
+    "CVE_CHECK_COPY_FILES": "0",
+    "CVE_CHECK_CREATE_MANIFEST": "0"
+  },
+  "flags": {
+    "CVE_STATUS": {
+      "CVE-2099-0001": "fixed-version: Original fixture claim only",
+      "CVE-2099-0003": "not-applicable-platform: Original fixture says \"different platform\"\nSecond line."
+    },
+    "CVE_CHECK_STATUSMAP": {
+      "fixed-version": "Patched",
+      "not-applicable-platform": "Ignored"
+    }
+  },
+  "patched": ["CVE-2099-0001"],
+  "unpatched": ["CVE-2099-0002"],
+  "ignored": ["CVE-2099-0003"],
+  "products": [["cvedelta-fixture", true], ["fixture-without-records", false]]
+}

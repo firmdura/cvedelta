@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "report_sha256": "49c54ffb65069670b5ef1265aa2ca86aae5422ec25856b301bceb2b9579bc377",
+  "firmware": {
+    "configuration_id": "fixture:local:writer",
+    "build_id": "original-writer-fixture-v1",
+    "source_revision": "c6a93e99c5f5625b9a5830f53f636e0506be933c985ccdca4b17d4a142d39219"
+  },
+  "scanner": {
+    "name": "yocto-cve-check",
+    "revision": "fc4316861becc9f0d41857b49f6438929ab4c291"
+  },
+  "database": {
+    "sha256": "2d4c3f6c30681cfd8e8792f2f9fa273424492ee97aef95172f0d8a0182967e98"
+  },
+  "coverage": {
+    "scope_sha256": "c2066d08a792ee84dfaa5ece9eb83b9be26ce2e6609d74ee39765fb822b9e1d7",
+    "complete": true
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "target": "demo-image",
+  "machine": "demo-machine",
+  "distro": "demo-distro",
+  "recipes": ["meta-demo/demo"],
+  "omissions": [],
+  "settings": {
+    "CVE_CHECK_SKIP_RECIPE": [],
+    "CVE_CHECK_LAYER_INCLUDELIST": [],
+    "CVE_CHECK_LAYER_EXCLUDELIST": [],
+    "CVE_CHECK_REPORT_PATCHED": "1",
+    "CVE_CHECK_COVERAGE": "1",
+    "CVE_CHECK_FORMAT_JSON": "1",
+    "CVE_CHECK_CREATE_MANIFEST": "1",
+    "cve-extra-exclusions.inc": "not used in synthetic example"
+  }
+}

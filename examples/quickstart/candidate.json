@@ -1,0 +1,10 @@
+{
+  "version": "1",
+  "package": [{
+    "name": "demo", "layer": "meta-demo", "version": "2.0",
+    "issue": [
+      {"id": "CVE-2099-0001", "status": "Patched", "detail": "invented candidate claim"},
+      {"id": "CVE-2099-0003", "status": "Unpatched"}
+    ]
+  }]
+}
