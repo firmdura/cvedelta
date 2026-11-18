@@ -17,12 +17,15 @@ import (
 	"github.com/firmdura/cvedelta/pkg/cvedelta"
 )
 
+const version = "v1.0.1"
+
 // Run executes arguments excluding argv[0]. Diagnostics go only to stderr;
-// valid reports go only to stdout, including outcomes 1 and 3. Errors take
-// precedence over all decisions and return 2. A failed stdout write can leave
-// bytes already written, but parsing/comparison/rendering failures emit none.
+// version information and valid reports go only to stdout, including report
+// outcomes 1 and 3. Errors take precedence over all decisions and return 2.
+// A failed stdout write can leave bytes already written, but
+// parsing/comparison/rendering failures emit none.
 func Run(args []string, stdout, stderr io.Writer) int {
-	data, outcome, err := compare(args)
+	data, outcome, err := commandOutput(args)
 	if err == nil {
 		if stdout == nil {
 			err = errors.New("stdout: nil writer")
@@ -45,7 +48,10 @@ func Run(args []string, stdout, stderr io.Writer) int {
 	return decision.ExitCode(outcome, err)
 }
 
-func compare(args []string) ([]byte, cvedelta.Decision, error) {
+func commandOutput(args []string) ([]byte, cvedelta.Decision, error) {
+	if len(args) == 1 && args[0] == "--version" {
+		return []byte("cvedelta " + version + "\n"), cvedelta.Clean, nil
+	}
 	if len(args) == 0 || args[0] != "compare" {
 		return nil, "", errors.New("expected command: compare")
 	}

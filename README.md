@@ -24,7 +24,7 @@ which CVEDelta preserves without independently verifying them.
 ## Build and try the example
 
 Linux amd64 is the supported release target. You can download its binary from
-the [v1.0.0 release](https://github.com/firmdura/cvedelta/releases/tag/v1.0.0),
+the [v1.0.1 release](https://github.com/firmdura/cvedelta/releases/tag/v1.0.1),
 or build from a source checkout with Go **1.27.4**, the exact toolchain pinned
 in `go.mod`. The running tool needs no credentials or network access and uses
 only Go's standard library.
@@ -41,8 +41,9 @@ go mod download
 make build
 ```
 
-The binary is now at `dist/cvedelta`. The remaining example commands run
-offline. All inputs in `examples/quickstart` are invented, including the CVE
+The binary is now at `dist/cvedelta`. Run `./dist/cvedelta --version` to identify
+the installed release. The remaining example commands run offline. All inputs
+in `examples/quickstart` are invented, including the CVE
 identifiers and metadata; they do not represent a real scan.
 
 Run the comparison and save its JSON output. Exit 1 is expected because the
@@ -152,7 +153,7 @@ interpretation, or the [input guide](docs/limits.md) for accepted fields,
 validation rules and limits. The [technical contract](docs/contracts.md) and
 [report schema](schemas/report-v1.schema.json) define the exact data formats.
 
-CVEDelta v1.0.0 does not accept SPDX, CycloneDX, `sbom-cve-check` or other
+CVEDelta v1.0.1 does not accept SPDX, CycloneDX, `sbom-cve-check` or other
 scanners. It does not download CVE databases, score risk, decide whether a
 vulnerability applies to a product, author VEX documents or remediate findings.
 
@@ -185,12 +186,12 @@ real CLI's four exit statuses, agreement with the library in both formats,
 deterministic output, examples and unchanged input bytes. The build guide also
 documents `make verify` and `make acceptance` for a prepared development host.
 
-Packaging creates `dist/package/cvedelta-v1.0.0-linux-amd64.tar.gz`, `.zip`
+Packaging creates `dist/package/cvedelta-v1.0.1-linux-amd64.tar.gz`, `.zip`
 and `SHA256SUMS`. It checks archive contents and extracted bytes, then tests
-each packaged binary's four exit statuses. Archives contain the binary,
-schemas, example inputs and guides. Full source verification and `go run`
-examples require a repository checkout. Creating packages does not publish a
-release.
+each packaged binary's version and four comparison exit statuses. Archives
+contain the binary, schemas, example inputs and guides. Full source verification
+and `go run` examples require a repository checkout. Creating packages does not
+publish a release.
 
 ## Licenses and fixture sources
 

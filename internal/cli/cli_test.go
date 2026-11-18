@@ -28,9 +28,12 @@ func TestStrictArgumentsEmitNoReport(t *testing.T) {
 	}{
 		{"missing command", nil},
 		{"unknown command", []string{"other"}},
+		{"version with extra argument", []string{"--version", "extra"}},
+		{"version with unknown flag", []string{"--version", "--unknown"}},
 		{"missing required", []string{"compare"}},
 		{"empty required", append(args(), "--baseline=")},
 		{"unknown flag", append(args(), "--bypass")},
+		{"version is not a compare flag", append(args(), "--version")},
 		{"extra positional", append(args(), "extra")},
 		{"wrong format", append(args(), "--format=JSON")},
 		{"empty selector", append(args(), "--fail-on=")},
@@ -60,10 +63,15 @@ func (w failingWriter) Write(p []byte) (int, error) {
 }
 
 func TestOutputErrorsOverrideDecision(t *testing.T) {
-	for _, extra := range [][]string{nil, {"--fail-on=none"}, {"--candidate-meta=../../testdata/provenance/synthetic/database.meta.json"}} {
+	for _, commandArgs := range [][]string{
+		args(),
+		append(args(), "--fail-on=none"),
+		append(args(), "--candidate-meta=../../testdata/provenance/synthetic/database.meta.json"),
+		{"--version"},
+	} {
 		for _, writer := range []io.Writer{nil, failingWriter{}, failingWriter{true}} {
 			var stderr bytes.Buffer
-			if exit := cli.Run(append(args(), extra...), writer, &stderr); exit != 2 || !strings.Contains(stderr.String(), "stdout") {
+			if exit := cli.Run(commandArgs, writer, &stderr); exit != 2 || !strings.Contains(stderr.String(), "stdout") {
 				t.Fatalf("output error did not override report decision: exit=%d, stderr=%q", exit, stderr.String())
 			}
 		}

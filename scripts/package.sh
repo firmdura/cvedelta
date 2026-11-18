@@ -31,7 +31,7 @@ import tarfile
 import tempfile
 import zipfile
 
-version = 'v1.0.0'
+version = 'v1.0.1'
 root = Path.cwd()
 out = root / 'dist/package'
 name = 'cvedelta-' + version + '-linux-amd64'
@@ -194,6 +194,9 @@ for index, path in enumerate(archives):
         if (extracted/file).read_bytes() != data:
             raise SystemExit('package: extraction checksum mismatch: '+file)
     binary = extracted/'cvedelta'
+    reported = subprocess.run([str(binary), '--version'], cwd=extracted, capture_output=True)
+    if reported.returncode or reported.stderr or reported.stdout != ('cvedelta ' + version + '\n').encode():
+        raise SystemExit('package: extracted binary version check failed')
     fixture = subprocess.run([sys.executable, 'testdata/provenance/producer/reproduce.py', '--check'],
                              cwd=extracted, capture_output=True)
     if fixture.returncode:

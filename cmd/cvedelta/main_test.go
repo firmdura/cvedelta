@@ -15,6 +15,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"reflect"
+	"regexp"
 	"runtime"
 	"strings"
 	"testing"
@@ -96,6 +97,16 @@ func run(t *testing.T, args []string) (int, []byte, []byte) {
 		t.Fatal(err)
 	}
 	return exit.ExitCode(), stdout.Bytes(), stderr.Bytes()
+}
+
+func TestProcessVersionWithoutInputs(t *testing.T) {
+	exit, stdout, stderr := run(t, []string{"--version"})
+	if exit != 0 || len(stderr) != 0 {
+		t.Fatalf("exit=%d stdout=%q stderr=%q", exit, stdout, stderr)
+	}
+	if !regexp.MustCompile(`^cvedelta v[0-9]+\.[0-9]+\.[0-9]+\n$`).Match(stdout) {
+		t.Fatalf("unexpected version output: %q", stdout)
+	}
 }
 
 func read(t *testing.T, path string) []byte {

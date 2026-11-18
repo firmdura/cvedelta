@@ -166,8 +166,9 @@ functions; the inventory does not establish broader legal compliance.
 
 Packaging checks exact archive membership, every extracted byte, the expected
 pinned attributions and extracted notices, and the Apache license. It rejects
-common private-path and credential markers and runs each extracted binary on
-Linux amd64 through exits 0, 1, 2 and 3. These are specific content and behavior
+common private-path and credential markers, checks each extracted binary's
+release version, and runs it on Linux amd64 through exits 0, 1, 2 and 3.
+These are specific content and behavior
 checks, not a general claim that a secret scanner has cleared the archives.
 Creating packages does not publish a release, create a tag, change repository
 visibility or request Go module indexing.

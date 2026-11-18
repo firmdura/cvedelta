@@ -4,6 +4,13 @@ Start with the [README example](../README.md) to build the tool and try a
 comparison. This guide explains the command, its decisions and the report
 fields. Original documentation: Apache-2.0.
 
+## Identify the installed version
+
+Run `cvedelta --version` to print the release version, for example
+`cvedelta v1.0.1`. It needs no input files, writes one line to stdout and exits
+0. Use this top-level option on its own; additional arguments are invalid.
+As with comparison output, a failed stdout write returns exit 2.
+
 ## Supply the inputs
 
 The **baseline** is the earlier report; the **candidate** is the report you
@@ -130,7 +137,7 @@ how to preserve these distinct statuses and their output.
 
 ## Read or save the report
 
-For exits 0, 1 and 3, stdout contains a complete report. Diagnostics go to
+For comparison exits 0, 1 and 3, stdout contains a complete report. Diagnostics go to
 stderr. Parsing, comparison and rendering all finish before the CLI begins
 writing to stdout. An output write failure returns exit 2 and can leave partial
 bytes; discard that output.
