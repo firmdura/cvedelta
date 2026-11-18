@@ -193,6 +193,13 @@ contain the binary, schemas, example inputs and guides. Full source verification
 and `go run` examples require a repository checkout. Creating packages does not
 publish a release.
 
+## About Firmdura
+
+This repository contains a standalone verification utility from
+[Firmdura](https://firmdura.com). Firmdura's commercial offer is shared embedded
+Linux security maintenance through versioned security layers or patch overlays
+for agreed user-space components.
+
 ## Licenses and fixture sources
 
 Original code, documentation and original fixtures use [Apache-2.0](LICENSE).
