@@ -149,6 +149,11 @@ func TestReadInputValidShapesAndExactText(t *testing.T) {
 
 func TestReadInputReportRejections(t *testing.T) {
 	good := report(component(`"pkg"`, `"1"`, oneIssue))
+	other := component(`"other"`, `"1"`, oneIssue)
+	conflictingIssues := strings.Join([]string{
+		`{"id":"CVE-2099-0001","status":"Ignored"}`, oneIssue,
+		`{"id":"CVE-2099-0002","status":"Ignored"}`, strings.ReplaceAll(oneIssue, "Unpatched", "Patched"),
+	}, ",")
 	cases := []struct{ name, raw, path string }{
 		{"empty", "", "report"},
 		{"not object", `[]`, "report"},
@@ -167,10 +172,14 @@ func TestReadInputReportRejections(t *testing.T) {
 		{"object package", `{"version":"1","package":{}}`, "report.package"},
 		{"null component", report(`null`), "report.package[0]"},
 		{"array component", report(`[]`), "report.package[0]"},
-		{"duplicate component", report(component(`"pkg"`, `"1"`, ""), component(`"pkg"`, `"1"`, "")), "report.package[1]"},
-		{"multiple versions", report(component(`"pkg"`, `"1"`, ""), component(`"pkg"`, `"2"`, "")), "report.package[1]"},
-		{"duplicate row", report(component(`"pkg"`, `"1"`, oneIssue+","+oneIssue)), "report.package[0].issue[1]"},
-		{"conflicting row", report(component(`"pkg"`, `"1"`, oneIssue+","+strings.ReplaceAll(oneIssue, "Unpatched", "Patched"))), "report.package[0].issue[1]"},
+		{"duplicate component", report(component(`"pkg"`, `"1"`, ""), component(`"pkg"`, `"1"`, "")),
+			"report.package[1]: duplicate component identity (first at report.package[0])"},
+		{"multiple versions", report(other, component(`"pkg"`, `"1"`, ""), component(`"extra"`, `"1"`, ""), component(`"pkg"`, `"2"`, "")),
+			"report.package[3]: duplicate component identity (first at report.package[1])"},
+		{"duplicate row", report(component(`"pkg"`, `"1"`, oneIssue+","+oneIssue)),
+			"report.package[0].issue[1]: duplicate finding identity (first at report.package[0].issue[0])"},
+		{"conflicting row", report(other, component(`"pkg"`, `"1"`, conflictingIssues)),
+			"report.package[1].issue[3]: duplicate finding identity (first at report.package[1].issue[1])"},
 		{"null row", report(component(`"pkg"`, `"1"`, "null")), "report.package[0].issue[0]"},
 		{"duplicate root key", `{"version":"1","package":[],"version":"1"}`, "report"},
 		{"escaped duplicate key", strings.Replace(good, `"id":`, `"\u0069d":"CVE-2024-9999","id":`, 1), "report.package[0].issue[0]"},

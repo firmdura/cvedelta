@@ -28,7 +28,7 @@ func NewInput(document Document, metadata Metadata, rawSHA256 string) (Input, er
 	if err := validateMetadata(metadata, rawSHA256); err != nil {
 		return Input{}, err
 	}
-	seen := make(map[ComponentID]bool, len(document.Components))
+	componentIndexes := make(map[ComponentID]int, len(document.Components))
 	rows := 0
 	for i, c := range document.Components {
 		where := fmt.Sprintf("report.package[%d]", i)
@@ -36,10 +36,10 @@ func NewInput(document Document, metadata Metadata, rawSHA256 string) (Input, er
 			return Input{}, fmt.Errorf("%s: name, layer and version must be nonempty", where)
 		}
 		key := ComponentID{Layer: c.Layer, Name: c.Name}
-		if seen[key] {
-			return Input{}, fmt.Errorf("%s: duplicate component identity", where)
+		if first, ok := componentIndexes[key]; ok {
+			return Input{}, fmt.Errorf("%s: duplicate component identity (first at report.package[%d])", where, first)
 		}
-		seen[key] = true
+		componentIndexes[key] = i
 		if c.Issues == nil {
 			return Input{}, fmt.Errorf("%s.issue: required array", where)
 		}
@@ -47,15 +47,15 @@ func NewInput(document Document, metadata Metadata, rawSHA256 string) (Input, er
 		if rows > MaxFindings {
 			return Input{}, fmt.Errorf("%s.issue: finding limit exceeded", where)
 		}
-		ids := make(map[string]bool, len(c.Issues))
+		issueIndexes := make(map[string]int, len(c.Issues))
 		for j, issue := range c.Issues {
 			if !cvePattern.MatchString(issue.ID) {
 				return Input{}, fmt.Errorf("%s.issue[%d].id: invalid CVE identifier", where, j)
 			}
-			if ids[issue.ID] {
-				return Input{}, fmt.Errorf("%s.issue[%d]: duplicate finding identity", where, j)
+			if first, ok := issueIndexes[issue.ID]; ok {
+				return Input{}, fmt.Errorf("%s.issue[%d]: duplicate finding identity (first at %s.issue[%d])", where, j, where, first)
 			}
-			ids[issue.ID] = true
+			issueIndexes[issue.ID] = j
 			switch issue.Status {
 			case Patched, Unpatched, Ignored:
 			default:

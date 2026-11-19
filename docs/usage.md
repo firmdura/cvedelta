@@ -7,7 +7,7 @@ fields. Original documentation: Apache-2.0.
 ## Identify the installed version
 
 Run `cvedelta --version` to print the release version, for example
-`cvedelta v1.0.1`. It needs no input files, writes one line to stdout and exits
+`cvedelta v1.0.2`. It needs no input files, writes one line to stdout and exits
 0. Use this top-level option on its own; additional arguments are invalid.
 As with comparison output, a failed stdout write returns exit 2.
 
@@ -63,6 +63,10 @@ The version is additional context, rather than part of the identity. An
 upgrade therefore allows the same finding to be compared across versions.
 Duplicate components, including entries with different versions, are invalid.
 So are repeated CVE IDs within one component; CVEDelta never merges them.
+For either error, the diagnostic gives both zero-based locations in the input
+report. For example, `report.package[3]: duplicate component identity (first
+at report.package[1])` points to the fourth and second entries in the `package`
+array, without printing their names.
 
 Each finding receives one category:
 

@@ -17,7 +17,7 @@ import (
 	"github.com/firmdura/cvedelta/pkg/cvedelta"
 )
 
-const version = "v1.0.1"
+const version = "v1.0.2"
 
 // Run executes arguments excluding argv[0]. Diagnostics go only to stderr;
 // version information and valid reports go only to stdout, including report
