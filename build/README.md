@@ -1,9 +1,8 @@
 # Build and verification guide
 
-CVEDelta's supported target is Linux amd64 with Go **1.27.4**. The foundation
-selected that stable release from [Go's official
-downloads](https://go.dev/dl/?mode=json) on 2026-11-15. `go.mod` pins the exact
-toolchain, and `build/environment.sh` pins the Linux amd64 manifest of the
+CVEDelta's supported target is Linux amd64 with Go **1.27.4**. This version was
+available from [Go downloads](https://go.dev/dl/?mode=json) on 2026-11-15.
+`go.mod` pins the toolchain, and `build/environment.sh` pins the Linux amd64 manifest of the
 official `golang:1.27.4-bookworm` image by SHA-256 digest. The image includes
 GCC for Go's race detector.
 

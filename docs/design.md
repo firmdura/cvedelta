@@ -41,10 +41,10 @@ or policy files and cannot verify their declared hashes against those files.
 The [provenance guide](../docs/provenance.md) explains how to capture all evidence
 from the same build.
 
-The foundation required a small, clearly labeled synthetic fixture and a
-redistributable fixture produced by a pinned public writer, with licenses and
-provenance retained. The producer fixture uses original local data and does
-not claim to be a real firmware scan.
+The [fixtures](../testdata/provenance) include synthetic reports and output
+from a pinned OpenEmbedded writer. The writer ran against invented local data.
+Its source revision, license, input and expected output are recorded in the
+[fixture README](../testdata/provenance/producer/README.md).
 
 ## Comparison rules
 
@@ -158,40 +158,32 @@ provide dashboards, suppress findings automatically or make regulatory-complianc
 judgments. Yocto status labels remain reported facts; CVEDelta does not
 independently verify `Patched` or `Ignored` claims.
 
-## Verification and documentation requirements
+## Verification
 
-`make verify` checks formatting, vet, race-enabled tests and expected output
-files. `make acceptance` runs the real CLI on repository fixtures through all
-four exits, compares CLI and library output, checks determinism and unchanged
-inputs, and parses JSON output. `make verify-linux` runs both in the pinned
-offline Linux container after explicit setup. The producer fixture must load
-without semantic edits; synthetic fixtures cover adversarial cases.
+`make verify` checks formatting, runs vet and race-enabled tests, and checks
+expected output files. `make acceptance` exercises all four exit codes, compares
+CLI and library output, checks that repeat runs agree and inputs stay unchanged,
+and parses the JSON output. After setup, `make verify-linux` runs both targets
+offline in the pinned Linux container.
 
-Acceptance includes checksum binding, version upgrades, native variants, changed
-databases and missing coverage. Cumulative review must account for every input
-finding, check that upgrades preserve identity without merging native variants,
-verify that invalid input takes precedence over policy and incomparability over
-`--fail-on none`, and inspect both formats for false remediation or compliance
-claims. Missing evidence must never become a passing result.
+The tests cover report checksums, version upgrades, native variants, changed
+databases and missing coverage. They check that each input finding appears in
+the comparison, that invalid inputs take precedence over policy outcomes, and
+that incomparable inputs return exit 3 even with `--fail-on none`.
 
-User documentation must explain installation, builds, support, accepted Yocto
-format and export paths, same-build provenance capture, metadata schema,
-identities, status precedence, categories, exits, invalid and incomparable
-results, limits, interpretation, library errors, offline behavior and fixture
-notices. The five-minute example must show new, status-changed and disappeared
-findings, then a changed-database comparison that exits 3. Library and automation
-examples must distinguish exits 1, 2 and 3 while retaining valid reports.
+The [provenance guide](provenance.md) describes how to collect each report
+and its metadata from the same build. The [quickstart](../examples/quickstart)
+includes a changed-database comparison, and the [CI example](../examples/ci.sh)
+shows how to retain the report and return the CLI's exit code.
 
-## Build and release requirements
+## Build and release
 
-The foundation selected the current supported stable Go release from
-[go.dev/dl](https://go.dev/dl/) at implementation time, pinned its exact toolchain
-and pinned the Linux verification image by digest. v1.0.0 supports Linux amd64;
-other hosts use the documented container. Original code and package documentation
-use Apache-2.0, with third-party licenses and fixture provenance retained. The
-running tool is offline and needs no credentials. Dependency downloads and
-container setup are explicit preparation steps, separate from offline tests.
-All build outputs belong in ignored `dist/`.
+v1.0.0 supports Linux amd64. The [build guide](../build/README.md) gives the
+Go toolchain version and pinned container for other hosts. Dependencies and
+container images are downloaded during setup. The running tool works offline
+without credentials. Local build output goes under `dist/`. Original code and
+documentation use Apache-2.0. The repository retains the licenses and provenance
+for third-party fixtures.
 
 Release verification includes versioned archives and `SHA256SUMS`, acceptance
 from a clean checkout in the pinned Linux environment, and source, archive,
