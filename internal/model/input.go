@@ -70,8 +70,11 @@ func validateMetadata(m Metadata, raw string) error {
 	if m.SchemaVersion != SchemaVersion {
 		return fmt.Errorf("metadata.schema_version: expected %d", SchemaVersion)
 	}
-	if !hashPattern.MatchString(raw) || !hashPattern.MatchString(m.ReportSHA256) || m.ReportSHA256 != raw {
-		return fmt.Errorf("metadata.report_sha256: invalid hash or report checksum mismatch")
+	if !hashPattern.MatchString(m.ReportSHA256) {
+		return fmt.Errorf("metadata.report_sha256: expected 64 lowercase hexadecimal characters")
+	}
+	if m.ReportSHA256 != raw {
+		return fmt.Errorf("metadata.report_sha256: checksum does not match the raw report bytes")
 	}
 	if strings.TrimSpace(m.Firmware.ConfigurationID) == "" || strings.TrimSpace(m.Firmware.BuildID) == "" || strings.TrimSpace(m.Firmware.SourceRevision) == "" {
 		return fmt.Errorf("metadata.firmware: all fields must be nonempty")

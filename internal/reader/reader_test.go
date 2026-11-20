@@ -379,10 +379,15 @@ func TestReadInputSchemaVersionExactNumbers(t *testing.T) {
 func TestReadInputRawChecksum(t *testing.T) {
 	raw := []byte(emptyReport)
 	base := metadata(t, raw)
-	assertInvalid(t, append(bytes.Clone(raw), '\n'), base, "metadata.report_sha256")
-	assertInvalid(t, append([]byte(" "), raw...), base, "metadata.report_sha256")
-	assertInvalid(t, raw, bytes.Replace(base, []byte(validMetadata(raw).ReportSHA256), []byte(strings.Repeat("0", 64)), 1), "metadata.report_sha256")
-	assertInvalid(t, raw, bytes.Replace(base, []byte(validMetadata(raw).ReportSHA256), []byte(strings.ToUpper(validMetadata(raw).ReportSHA256)), 1), "metadata.report_sha256")
+	digest := validMetadata(raw).ReportSHA256
+	const mismatch = "metadata.report_sha256: checksum does not match the raw report bytes"
+	const malformed = "metadata.report_sha256: expected 64 lowercase hexadecimal characters"
+	assertInvalid(t, append(bytes.Clone(raw), '\n'), base, mismatch)
+	assertInvalid(t, append([]byte(" "), raw...), base, mismatch)
+	assertInvalid(t, raw, bytes.Replace(base, []byte(digest), []byte(strings.Repeat("0", 64)), 1), mismatch)
+	for _, invalid := range []string{strings.ToUpper(digest), digest[:63], strings.Repeat("g", 64)} {
+		assertInvalid(t, raw, bytes.Replace(base, []byte(digest), []byte(invalid), 1), malformed)
+	}
 }
 
 func TestReadInputUnicodeAndSafeDiagnostics(t *testing.T) {

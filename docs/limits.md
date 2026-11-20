@@ -42,10 +42,16 @@ All hashes must contain exactly 64 lowercase hexadecimal characters.
 revision strings must be nonblank. CVEDelta does not fill in missing values
 from filenames, the environment or the current time.
 
-`report_sha256` must match the exact report bytes. Database and coverage
-hashes are checked for the required format, then compared as caller-supplied
-declarations. CVEDelta does not receive the database or coverage-policy files
-and cannot check whether those hashes describe the build correctly.
+`report_sha256` must match the exact report bytes. A format error means the
+metadata field is not a 64-character lowercase hex digest. A checksum mismatch
+means the digest is well-formed but differs from the SHA-256 of the supplied
+report. Check that the report and metadata came from the same build and that
+the report hasn't been reformatted; even an extra newline changes its checksum.
+
+Database and coverage hashes are checked for the required format, then compared
+as caller-supplied declarations. CVEDelta does not receive the database or
+coverage-policy files and cannot check whether those hashes describe the build
+correctly.
 `coverage.complete: false` is valid metadata, but makes the inputs
 incomparable; it does not produce an input error.
 
