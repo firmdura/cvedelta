@@ -149,7 +149,7 @@ func quote(s string) string {
 	var visible strings.Builder
 	visible.WriteString("`\"")
 	for _, r := range s {
-		if unicode.IsControl(r) || unicode.Is(unicode.Cf, r) || r == '\u2028' || r == '\u2029' {
+		if unicode.IsControl(r) || unicode.Is(unicode.Cf, r) || (r > unicode.MaxASCII && unicode.IsSpace(r)) {
 			switch r {
 			case '\n':
 				visible.WriteString(`\n`)

@@ -7,7 +7,7 @@ fields. Original documentation: Apache-2.0.
 ## Identify the installed version
 
 Run `cvedelta --version` to print the release version, for example
-`cvedelta v1.0.4`. It needs no input files, writes one line to stdout and exits
+`cvedelta v1.0.5`. It needs no input files, writes one line to stdout and exits
 0. Use this top-level option on its own; additional arguments are invalid.
 As with comparison output, a failed stdout write returns exit 2.
 
@@ -161,6 +161,9 @@ is ignored.
 
 Markdown includes the same findings and provenance limitations. It escapes
 untrusted HTML, pipes, backticks, control and ANSI text, and newlines; source
-URLs appear as text rather than active links. Both formats produce identical
-bytes on repeated runs with identical inputs and options. Neither adds current
-timestamps, input paths or invented evidence.
+URLs appear as text rather than active links. To distinguish otherwise similar
+labels, Markdown shows non-ASCII spaces as escapes: a nonbreaking space appears
+as `\u{A0}`, while an ordinary space stays a space. JSON preserves the original
+strings. Both formats produce identical bytes on repeated runs with identical
+inputs and options. Neither adds current timestamps, input paths or invented
+evidence.

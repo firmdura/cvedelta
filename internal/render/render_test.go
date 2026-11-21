@@ -259,6 +259,34 @@ func TestHostileTextIsLosslessJSONAndInertMarkdown(t *testing.T) {
 	}
 }
 
+func TestMarkdownDistinguishesUnicodeSpaces(t *testing.T) {
+	r := load(t, "report-none")
+	r.Baseline.Firmware.BuildID = "café batch 7"
+	r.Candidate.Firmware.BuildID = "café\u00a0batch\u202f7"
+
+	var md bytes.Buffer
+	if err := WriteMarkdown(&md, r); err != nil {
+		t.Fatal(err)
+	}
+	for _, want := range []string{"`\"café batch 7\"`", "`\"café\\u{A0}batch\\u{202F}7\"`"} {
+		if !strings.Contains(md.String(), "- firmware.build_id: "+want+"\n") {
+			t.Errorf("missing Markdown build label %s", want)
+		}
+	}
+
+	var j bytes.Buffer
+	if err := WriteJSON(&j, r); err != nil {
+		t.Fatal(err)
+	}
+	var decoded model.Report
+	if err := json.Unmarshal(j.Bytes(), &decoded); err != nil {
+		t.Fatal(err)
+	}
+	if decoded.Candidate.Firmware.BuildID != r.Candidate.Firmware.BuildID {
+		t.Errorf("JSON changed the build label to %q", decoded.Candidate.Firmware.BuildID)
+	}
+}
+
 func TestAttributesAbsentAndPresentEmpty(t *testing.T) {
 	r := load(t, "report-unchanged")
 	r.Records = r.Records[3:4]
