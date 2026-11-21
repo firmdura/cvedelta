@@ -89,6 +89,24 @@ func (p *parser) delimiter(path string, want json.Delim) error {
 	return nil
 }
 
+func (p *parser) objectKey(path string, seen map[string]int64) (string, error) {
+	t, err := p.token(path)
+	if err != nil {
+		return "", err
+	}
+	key, ok := t.(string)
+	if !ok {
+		return "", fmt.Errorf("%s: expected object key", path)
+	}
+	// InputOffset after a key is the one-based byte position of its closing quote.
+	end := p.decoder.InputOffset()
+	if first, ok := seen[key]; ok {
+		return "", fmt.Errorf("%s: duplicate JSON object key at byte %d (first at byte %d)", path, end, first)
+	}
+	seen[key] = end
+	return key, nil
+}
+
 // object checks decoded keys, so escaped spellings cannot hide duplicates.
 // The callback consumes recognized fields; arbitrary metadata is traversed with
 // the same duplicate checks but is never copied into the interpreted document.
@@ -96,20 +114,12 @@ func (p *parser) object(path string, required []string, extra bool, field func(s
 	if err := p.delimiter(path, '{'); err != nil {
 		return err
 	}
-	seen := make(map[string]bool)
+	seen := make(map[string]int64)
 	for p.decoder.More() {
-		t, err := p.token(path)
+		key, err := p.objectKey(path, seen)
 		if err != nil {
 			return err
 		}
-		key, ok := t.(string)
-		if !ok {
-			return fmt.Errorf("%s: expected object key", path)
-		}
-		if seen[key] {
-			return fmt.Errorf("%s: duplicate JSON object key", path)
-		}
-		seen[key] = true
 		known, err := field(key)
 		if err != nil {
 			return err
@@ -127,7 +137,7 @@ func (p *parser) object(path string, required []string, extra bool, field func(s
 		return err
 	}
 	for _, name := range required {
-		if !seen[name] {
+		if _, ok := seen[name]; !ok {
 			return fmt.Errorf("%s.%s: required field missing", path, name)
 		}
 	}
@@ -194,13 +204,13 @@ func (p *parser) skip(path string) error {
 	}
 	type container struct {
 		end  json.Delim
-		keys map[string]bool // nil for arrays
+		keys map[string]int64 // nil for arrays
 	}
 	var stack []container
 	for {
 		switch t {
 		case json.Delim('{'):
-			stack = append(stack, container{'}', make(map[string]bool)})
+			stack = append(stack, container{'}', make(map[string]int64)})
 		case json.Delim('['):
 			stack = append(stack, container{end: ']'})
 		}
@@ -217,18 +227,9 @@ func (p *parser) skip(path string) error {
 				continue
 			}
 			if current.keys != nil {
-				keyToken, err := p.token(path)
-				if err != nil {
+				if _, err := p.objectKey(path, current.keys); err != nil {
 					return err
 				}
-				key, ok := keyToken.(string)
-				if !ok {
-					return fmt.Errorf("%s: expected object key", path)
-				}
-				if current.keys[key] {
-					return fmt.Errorf("%s: duplicate JSON object key", path)
-				}
-				current.keys[key] = true
 			}
 			t, err = p.token(path)
 			if err != nil {

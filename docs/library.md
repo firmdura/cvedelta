@@ -11,7 +11,7 @@ The repository pins Go **1.27.4**. In your own Go module, add the released
 dependency while network access is available:
 
 ```sh
-go get github.com/firmdura/cvedelta@v1.0.3
+go get github.com/firmdura/cvedelta@v1.0.4
 ```
 
 Then import the public package:

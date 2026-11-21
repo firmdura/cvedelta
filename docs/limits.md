@@ -80,6 +80,12 @@ required fields, wrong types, duplicate component or finding identities,
 invalid CVE IDs, unsupported statuses and report checksum mismatches. The
 [CLI guide](usage.md) explains identity matching and comparability.
 
+For a duplicate JSON key, the error gives two byte positions in the affected
+file: the repeated key first, then its first occurrence in the same object.
+Each position counts from 1 and points to the key's closing quote. This also
+works for keys inside ignored report fields, without printing the key or its
+values.
+
 Different firmware configuration IDs are also an error, as are invalid
 options, read errors, invalid reports supplied to a writer and output errors.
 The CLI returns exit 2 for these failures; no option can turn them into a

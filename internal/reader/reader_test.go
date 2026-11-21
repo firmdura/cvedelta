@@ -181,9 +181,10 @@ func TestReadInputReportRejections(t *testing.T) {
 		{"conflicting row", report(other, component(`"pkg"`, `"1"`, conflictingIssues)),
 			"report.package[1].issue[3]: duplicate finding identity (first at report.package[1].issue[1])"},
 		{"null row", report(component(`"pkg"`, `"1"`, "null")), "report.package[0].issue[0]"},
-		{"duplicate root key", `{"version":"1","package":[],"version":"1"}`, "report"},
+		{"duplicate root key", `{"version":"1","package":[],"version":"1"}`, "report: duplicate JSON object key at byte 37 (first at byte 10)"},
 		{"escaped duplicate key", strings.Replace(good, `"id":`, `"\u0069d":"CVE-2024-9999","id":`, 1), "report.package[0].issue[0]"},
-		{"ignored root duplicate", strings.TrimSuffix(emptyReport, "}") + `,"products":{"x":1,"x":2}}`, "report.<metadata>"},
+		{"duplicate in second ignored object", `{"version":"1","package":[],"notes":[{"label":0},{"label":"café","l\u0061bel":2}]}`,
+			"report.<metadata>: duplicate JSON object key at byte 78 (first at byte 57)"},
 		{"ignored component duplicate", report(strings.TrimSuffix(component(`"pkg"`, `"1"`, ""), "}") + `,"products":[{"x":[{"same":0,"\u0073ame":1}]}]}`), "report.package[0].<metadata>"},
 		{"ignored issue duplicate", strings.Replace(good, `"status":`, `"extra":{"x":1,"x":1},"status":`, 1), "report.package[0].issue[0].<metadata>"},
 		{"bad ignored syntax", strings.TrimSuffix(emptyReport, "}") + `,"products":[1,]}`, "report.<metadata>"},
@@ -344,7 +345,7 @@ func TestReadInputMetadataRejections(t *testing.T) {
 	}
 	for _, tc := range []struct{ old, replacement, path string }{
 		{`"schema_version":1`, `"Schema_version":1`, "metadata"},
-		{`"schema_version":1`, `"schema_version":1,"schema_version":1`, "metadata"},
+		{`"schema_version":1`, `"schema_version":1,"schema_version":1`, "metadata: duplicate JSON object key at byte 36 (first at byte 17)"},
 		{`"complete":true`, `"complete":false,"complete":true`, "metadata.coverage"},
 		{`"revision":"fixture-producer"`, `"revision":"a","\u0072evision":"b"`, "metadata.scanner"},
 		{strings.Repeat("a", 64), strings.Repeat("A", 64), "metadata.database.sha256"},
