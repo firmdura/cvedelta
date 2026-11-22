@@ -80,6 +80,11 @@ required fields, wrong types, duplicate component or finding identities,
 invalid CVE IDs, unsupported statuses and report checksum mismatches. The
 [CLI guide](usage.md) explains identity matching and comparability.
 
+For invalid UTF-8 in a report or metadata file, the error points to the first
+byte of the invalid sequence. For an unpaired Unicode surrogate escape, it
+points to the escape's backslash. Positions count raw bytes from 1, not
+characters; the diagnostic does not print the surrounding text.
+
 For a duplicate JSON key, the error gives two byte positions in the affected
 file: the repeated key first, then its first occurrence in the same object.
 Each position counts from 1 and points to the key's closing quote. This also

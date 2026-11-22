@@ -31,7 +31,7 @@ import tarfile
 import tempfile
 import zipfile
 
-version = 'v1.0.5'
+version = 'v1.0.6'
 root = Path.cwd()
 out = root / 'dist/package'
 name = 'cvedelta-' + version + '-linux-amd64'

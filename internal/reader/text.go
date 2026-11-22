@@ -42,7 +42,14 @@ func isOne(n json.Number) bool {
 // source strings. The decoder still owns all other JSON syntax validation.
 func validateText(raw []byte, path string) error {
 	if !utf8.Valid(raw) {
-		return fmt.Errorf("%s: invalid UTF-8 JSON", path)
+		// Locate the bad sequence only on failure. A literal U+FFFD is valid.
+		for i := 0; i < len(raw); {
+			r, size := utf8.DecodeRune(raw[i:])
+			if r == utf8.RuneError && size == 1 {
+				return fmt.Errorf("%s: invalid UTF-8 JSON at byte %d", path, i+1)
+			}
+			i += size
+		}
 	}
 	inString := false
 	for i := 0; i < len(raw); i++ {
@@ -53,6 +60,7 @@ func validateText(raw []byte, path string) error {
 		if !inString || raw[i] != '\\' {
 			continue
 		}
+		start := i
 		i++
 		if i >= len(raw) || raw[i] != 'u' {
 			continue
@@ -62,18 +70,16 @@ func validateText(raw []byte, path string) error {
 			continue // The JSON decoder reports malformed/truncated escapes.
 		}
 		i += 4
-		if u >= 0xD800 && u <= 0xDBFF {
-			if i+2 >= len(raw) || raw[i+1] != '\\' || raw[i+2] != 'u' {
-				return fmt.Errorf("%s: unpaired Unicode surrogate", path)
-			}
-			low, ok := escapedUnit(raw, i+2)
-			if !ok || low < 0xDC00 || low > 0xDFFF {
-				return fmt.Errorf("%s: unpaired Unicode surrogate", path)
-			}
-			i += 6
-		} else if u >= 0xDC00 && u <= 0xDFFF {
-			return fmt.Errorf("%s: unpaired Unicode surrogate", path)
+		if u < 0xD800 || u > 0xDFFF {
+			continue
 		}
+		if u <= 0xDBFF && i+2 < len(raw) && raw[i+1] == '\\' && raw[i+2] == 'u' {
+			if low, ok := escapedUnit(raw, i+2); ok && low >= 0xDC00 && low <= 0xDFFF {
+				i += 6
+				continue
+			}
+		}
+		return fmt.Errorf("%s: unpaired Unicode surrogate at byte %d", path, start+1)
 	}
 	return nil
 }

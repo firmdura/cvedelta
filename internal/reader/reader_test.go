@@ -392,23 +392,24 @@ func TestReadInputRawChecksum(t *testing.T) {
 }
 
 func TestReadInputUnicodeAndSafeDiagnostics(t *testing.T) {
+	prefix := strings.TrimSuffix(emptyReport, "}") + `,"unknown":"café` + "\uFFFD"
 	for _, escaped := range []string{`\ud800`, `\udc00`, `\ud800\u0000`, `\ud800x`, `\ud800\ud800`} {
-		raw := []byte(strings.TrimSuffix(emptyReport, "}") + `,"unknown":"` + escaped + `"}`)
-		assertInvalid(t, raw, metadata(t, raw), "report")
+		raw := []byte(prefix + escaped + `"}`)
+		assertInvalid(t, raw, metadata(t, raw), fmt.Sprintf("report: unpaired Unicode surrogate at byte %d", len(prefix)+1))
 	}
 	for _, escaped := range []string{`\ud83d\ude80`, `\\ud800`, `\ufffd`} {
-		raw := []byte(strings.TrimSuffix(emptyReport, "}") + `,"unknown":"` + escaped + `"}`)
+		raw := []byte(prefix + escaped + `"}`)
 		if _, err := ReadInput(bytes.NewReader(raw), bytes.NewReader(metadata(t, raw))); err != nil {
 			t.Fatalf("valid Unicode %s rejected: %v", escaped, err)
 		}
 	}
-	raw := append([]byte(strings.TrimSuffix(emptyReport, "}")+`,"unknown":"`), 0xff, '"', '}')
-	assertInvalid(t, raw, metadata(t, raw), "report")
+	raw := []byte(prefix + "\xe2\x82" + `"}`)
+	assertInvalid(t, raw, metadata(t, raw), fmt.Sprintf("report: invalid UTF-8 JSON at byte %d", len(prefix)+1))
 	good := []byte(emptyReport)
 	meta := bytes.Replace(metadata(t, good), []byte("fixture-build"), []byte{0xff}, 1)
-	assertInvalid(t, good, meta, "metadata")
+	assertInvalid(t, good, meta, fmt.Sprintf("metadata: invalid UTF-8 JSON at byte %d", bytes.IndexByte(meta, 0xff)+1))
 	meta = bytes.Replace(metadata(t, good), []byte("fixture-build"), []byte(`\ud800`), 1)
-	assertInvalid(t, good, meta, "metadata")
+	assertInvalid(t, good, meta, fmt.Sprintf("metadata: unpaired Unicode surrogate at byte %d", bytes.Index(meta, []byte(`\ud800`))+1))
 	secret := strings.Repeat("PRIVATE-REPORT-BODY", 1000)
 	raw = []byte(strings.TrimSuffix(emptyReport, "}") + `,"` + secret + `":{"x":1,"x":2}}`)
 	_, err := ReadInput(bytes.NewReader(raw), bytes.NewReader(metadata(t, raw)))
