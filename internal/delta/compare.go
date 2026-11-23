@@ -151,7 +151,9 @@ func addRecord(result *model.Delta, record model.Record) {
 }
 
 func changedFields(before, after model.Context) []string {
-	fields := make([]string, 0, 12)
+	// Collect on the stack so an unchanged finding needs no backing array.
+	var scratch [12]string
+	fields := scratch[:0]
 	if before.Version != after.Version {
 		fields = append(fields, "version")
 	}
@@ -178,7 +180,7 @@ func changedFields(before, after model.Context) []string {
 			fields = append(fields, field.name)
 		}
 	}
-	return fields
+	return slices.Clone(fields)
 }
 
 func differentText(a, b *string) bool {

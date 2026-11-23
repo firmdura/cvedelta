@@ -7,7 +7,7 @@ fields. Original documentation: Apache-2.0.
 ## Identify the installed version
 
 Run `cvedelta --version` to print the release version, for example
-`cvedelta v1.0.6`. It needs no input files, writes one line to stdout and exits
+`cvedelta v1.0.7`. It needs no input files, writes one line to stdout and exits
 0. Use this top-level option on its own; additional arguments are invalid.
 As with comparison output, a failed stdout write returns exit 2.
 

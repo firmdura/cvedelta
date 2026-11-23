@@ -11,7 +11,7 @@ The repository pins Go **1.27.4**. In your own Go module, add the released
 dependency while network access is available:
 
 ```sh
-go get github.com/firmdura/cvedelta@v1.0.6
+go get github.com/firmdura/cvedelta@v1.0.7
 ```
 
 Then import the public package:
@@ -112,6 +112,10 @@ invalid options and different firmware configuration IDs. Otherwise, it
 returns a complete report whose data do not alias either input. All nested
 input and output types, and the associated constants, are available through
 the public package.
+
+When budgeting memory for a large comparison, count unchanged findings too:
+each keeps both contexts. Its `ChangedFields` slice is empty (`[]` in JSON)
+and needs no backing array for field names.
 
 `WriteJSON(io.Writer, Report) error` and `WriteMarkdown(io.Writer, Report)
 error` validate the report before writing and return any writer error. A

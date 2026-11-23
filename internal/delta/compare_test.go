@@ -49,7 +49,7 @@ func fixtureInput(t *testing.T, report, metadata string) model.Input {
 	return input
 }
 
-func construct(t *testing.T, document model.Document, metadata model.Metadata) model.Input {
+func construct(t testing.TB, document model.Document, metadata model.Metadata) model.Input {
 	t.Helper()
 	input, err := model.NewInput(document, metadata, metadata.ReportSHA256)
 	if err != nil {
@@ -95,6 +95,29 @@ func compare(t *testing.T, before, after model.Input) model.Delta {
 		t.Fatal(err)
 	}
 	return got
+}
+
+// Measure comparison of already validated synthetic reports, not JSON parsing.
+func BenchmarkCompareMatchedFindings(b *testing.B) {
+	issues := make([]model.Issue, 4096)
+	for i := range issues {
+		issues[i] = issue(fmt.Sprintf("CVE-2099-%04d", i+1), model.Unpatched)
+	}
+	input := func(version string) model.Input {
+		return construct(b, document(component("meta", "demo", version, issues...)), metadata())
+	}
+	before := input("1")
+	for _, tc := range []struct{ name, version string }{{"unchanged", "1"}, {"version_changed", "2"}} {
+		after := input(tc.version)
+		b.Run(tc.name, func(b *testing.B) {
+			b.ReportAllocs()
+			for b.Loop() {
+				if _, err := delta.Compare(before, after); err != nil {
+					b.Fatal(err)
+				}
+			}
+		})
+	}
 }
 
 func TestFrozenExpectedDeltas(t *testing.T) {
