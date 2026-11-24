@@ -4,10 +4,16 @@ Start with the [README example](../README.md) to build the tool and try a
 comparison. This guide explains the command, its decisions and the report
 fields. Original documentation: Apache-2.0.
 
-## Identify the installed version
+## Get help and identify the installed version
+
+Run `cvedelta --help` or `cvedelta compare --help` for the required input
+paths, options and comparison exit codes. `-h` works in either position.
+Used on its own, the help flag prints to stdout and exits 0 without opening
+files or comparing reports. The CI wrapper also prints help to stdout without
+replacing `dist/ci/report.json`.
 
 Run `cvedelta --version` to print the release version, for example
-`cvedelta v1.0.7`. It needs no input files, writes one line to stdout and exits
+`cvedelta v1.0.8`. It needs no input files, writes one line to stdout and exits
 0. Use this top-level option on its own; additional arguments are invalid.
 As with comparison output, a failed stdout write returns exit 2.
 

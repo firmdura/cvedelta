@@ -21,6 +21,22 @@ func args() []string {
 		"--candidate-meta", filepath.Join(fixture, "candidate.meta.json")}
 }
 
+func TestOfflineHelp(t *testing.T) {
+	for _, argv := range [][]string{{"-h"}, {"--help"}, {"compare", "-h"}, {"compare", "--help"}} {
+		t.Run(strings.Join(argv, " "), func(t *testing.T) {
+			var stdout, stderr bytes.Buffer
+			if exit := cli.Run(argv, &stdout, &stderr); exit != 0 || stderr.Len() != 0 {
+				t.Fatalf("exit=%d stderr=%q", exit, stderr.String())
+			}
+			for _, want := range []string{"Usage:", "cvedelta compare", "--baseline ", "--baseline-meta ", "--candidate ", "--candidate-meta ", "--format", "--fail-on", "incomparable"} {
+				if !strings.Contains(stdout.String(), want) {
+					t.Errorf("help is missing %q", want)
+				}
+			}
+		})
+	}
+}
+
 func TestStrictArgumentsEmitNoReport(t *testing.T) {
 	for _, tc := range []struct {
 		name string
@@ -30,6 +46,9 @@ func TestStrictArgumentsEmitNoReport(t *testing.T) {
 		{"unknown command", []string{"other"}},
 		{"version with extra argument", []string{"--version", "extra"}},
 		{"version with unknown flag", []string{"--version", "--unknown"}},
+		{"help with extra argument", []string{"--help", "extra"}},
+		{"help before compare arguments", []string{"compare", "-h", "--format=json"}},
+		{"help after compare arguments", append(args(), "--help")},
 		{"missing required", []string{"compare"}},
 		{"empty required", append(args(), "--baseline=")},
 		{"unknown flag", append(args(), "--bypass")},
@@ -68,6 +87,7 @@ func TestOutputErrorsOverrideDecision(t *testing.T) {
 		append(args(), "--fail-on=none"),
 		append(args(), "--candidate-meta=../../testdata/provenance/synthetic/database.meta.json"),
 		{"--version"},
+		{"compare", "--help"},
 	} {
 		for _, writer := range []io.Writer{nil, failingWriter{}, failingWriter{true}} {
 			var stderr bytes.Buffer

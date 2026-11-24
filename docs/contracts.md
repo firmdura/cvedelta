@@ -259,6 +259,9 @@ cvedelta compare --baseline old.json --baseline-meta old.meta.json \
   [--format json|markdown] [--fail-on CATEGORIES]
 ```
 
+For usage without a comparison, pass `--help` or `-h` alone, with or without
+the `compare` command. Help goes to stdout and exits 0 unless writing fails.
+
 The default format is `markdown`, and the default policy selects all four
 changed categories. `CATEGORIES` is a comma-separated list of their exact names,
 or `none` alone. Empty tokens, surrounding whitespace, unknown names, duplicates,

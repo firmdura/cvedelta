@@ -17,10 +17,34 @@ import (
 	"github.com/firmdura/cvedelta/pkg/cvedelta"
 )
 
-const version = "v1.0.7"
+const version = "v1.0.8"
+
+const usage = `Compare two Yocto cve-check version 1 reports offline.
+
+Usage:
+  cvedelta compare --baseline OLD --baseline-meta OLD_META \
+                   --candidate NEW --candidate-meta NEW_META [options]
+  cvedelta [compare] --help
+  cvedelta --version
+
+Each report needs its own metadata file. Use the earlier report as the baseline.
+
+Options:
+  --format FORMAT         markdown (default) or json
+  --fail-on CATEGORIES    Comma-separated subset of new, no_longer_reported,
+                          status_changed and context_changed (no spaces).
+                          Defaults to all four; use none to disable exit 1.
+  -h, --help              Show this help without reading inputs. Use alone.
+
+Comparison exit codes:
+  0  Comparable; no selected changes.
+  1  Comparable; selected changes found.
+  2  Error; discard any partial output.
+  3  Inputs are incomparable; see the report for reasons.
+`
 
 // Run executes arguments excluding argv[0]. Diagnostics go only to stderr;
-// version information and valid reports go only to stdout, including report
+// help, version information and valid reports go only to stdout, including report
 // outcomes 1 and 3. Errors take precedence over all decisions and return 2.
 // A failed stdout write can leave bytes already written, but
 // parsing/comparison/rendering failures emit none.
@@ -51,6 +75,9 @@ func Run(args []string, stdout, stderr io.Writer) int {
 func commandOutput(args []string) ([]byte, cvedelta.Decision, error) {
 	if len(args) == 1 && args[0] == "--version" {
 		return []byte("cvedelta " + version + "\n"), cvedelta.Clean, nil
+	}
+	if wantsHelp(args) {
+		return []byte(usage), cvedelta.Clean, nil
 	}
 	if len(args) == 0 || args[0] != "compare" {
 		return nil, "", errors.New("expected command: compare")
@@ -113,6 +140,13 @@ func commandOutput(args []string) ([]byte, cvedelta.Decision, error) {
 		return nil, "", err
 	}
 	return output.Bytes(), report.Decision, nil
+}
+
+func wantsHelp(args []string) bool {
+	if len(args) > 0 && args[0] == "compare" {
+		args = args[1:]
+	}
+	return len(args) == 1 && (args[0] == "--help" || args[0] == "-h")
 }
 
 func readInput(reportPath, metadataPath string) (cvedelta.Input, error) {

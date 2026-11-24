@@ -211,7 +211,7 @@ func TestDelivery(t *testing.T) {
 		})
 	}
 	// Exercise the exact CI wrapper's four branches without losing the status.
-	for _, index := range []int{0, 1, 2, 6} {
+	for _, index := range []int{6, 0, 1, 2} {
 		c := cases[index]
 		args := []string{"examples/ci.sh", "--baseline", c.b, "--baseline-meta", c.bm, "--candidate", c.c, "--candidate-meta", c.cm, "--format", "json"}
 		if c.fail != "" {
@@ -220,6 +220,20 @@ func TestDelivery(t *testing.T) {
 		_, stderr, status := invoke("sh", args...)
 		if status != c.status || len(stderr) == 0 {
 			t.Fatalf("CI branch %s: %d: %s", c.name, status, stderr)
+		}
+	}
+	// Help is not a comparison decision and must not replace the last report.
+	saved := read("dist/ci/report.json")
+	if !json.Valid(saved) {
+		t.Fatal("expected a saved JSON comparison report")
+	}
+	for _, flag := range []string{"--help", "-h"} {
+		out, stderr, status := invoke("sh", "examples/ci.sh", flag)
+		if status != 0 || len(stderr) != 0 || !bytes.Contains(out, []byte("cvedelta compare")) {
+			t.Fatalf("CI %s: exit=%d stdout=%q stderr=%q", flag, status, out, stderr)
+		}
+		if !bytes.Equal(saved, read("dist/ci/report.json")) {
+			t.Fatalf("CI %s replaced the comparison report", flag)
 		}
 	}
 	// Literally exercise canonicalization and metadata generation on repo files.

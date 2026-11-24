@@ -2,6 +2,11 @@
 # SPDX-License-Identifier: Apache-2.0
 # Run from the repository root after make build. Forward compare flags.
 set -eu
+if [ "$#" -eq 1 ]; then
+    case "$1" in
+        -h|--help) exec "${CVEDELTA_BINARY:-./dist/cvedelta}" compare "$1" ;;
+    esac
+fi
 mkdir -p dist/ci
 status=0
 "${CVEDELTA_BINARY:-./dist/cvedelta}" compare "$@" > dist/ci/report.json || status=$?
