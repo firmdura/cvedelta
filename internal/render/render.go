@@ -8,7 +8,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"sort"
+	"slices"
 	"strings"
 	"unicode"
 
@@ -120,27 +120,34 @@ func prepare(r model.Report) (model.Report, error) {
 	if err := validate(r); err != nil {
 		return model.Report{}, fmt.Errorf("render report: %w", err)
 	}
-	// Only these outer lists are reordered; no caller-owned slice is modified.
-	r.Records = append([]model.Record{}, r.Records...)
-	sort.Slice(r.Records, func(i, j int) bool {
-		a, b := r.Records[i], r.Records[j]
-		if a.Component != b.Component {
-			return componentLess(a.Component, b.Component)
+	r.Records = sortedView(r.Records, func(a, b model.Record) int {
+		if order := compareComponent(a.Component, b.Component); order != 0 {
+			return order
 		}
-		return a.CVEID < b.CVEID
+		return strings.Compare(a.CVEID, b.CVEID)
 	})
-	r.ComponentVersionChanges = append([]model.ComponentVersionChange{}, r.ComponentVersionChanges...)
-	sort.Slice(r.ComponentVersionChanges, func(i, j int) bool {
-		return componentLess(r.ComponentVersionChanges[i].Component, r.ComponentVersionChanges[j].Component)
+	r.ComponentVersionChanges = sortedView(r.ComponentVersionChanges, func(a, b model.ComponentVersionChange) int {
+		return compareComponent(a.Component, b.Component)
 	})
 	return r, nil
 }
 
-func componentLess(a, b model.ComponentID) bool {
-	if a.Layer != b.Layer {
-		return a.Layer < b.Layer
+// Compare already returns sorted lists. Copy only when rendering needs to
+// reorder one, so a caller's report is never sorted in place.
+func sortedView[T any](items []T, compare func(T, T) int) []T {
+	if slices.IsSortedFunc(items, compare) {
+		return items
 	}
-	return a.Name < b.Name
+	items = slices.Clone(items)
+	slices.SortFunc(items, compare)
+	return items
+}
+
+func compareComponent(a, b model.ComponentID) int {
+	if order := strings.Compare(a.Layer, b.Layer); order != 0 {
+		return order
+	}
+	return strings.Compare(a.Name, b.Name)
 }
 
 // The payload cannot close its code span or split a table cell. Code spans also

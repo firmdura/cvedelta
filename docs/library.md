@@ -11,7 +11,7 @@ The repository pins Go **1.27.4**. In your own Go module, add the released
 dependency while network access is available:
 
 ```sh
-go get github.com/firmdura/cvedelta@v1.0.8
+go get github.com/firmdura/cvedelta@v1.0.9
 ```
 
 Then import the public package:
@@ -119,8 +119,11 @@ and needs no backing array for field names.
 
 `WriteJSON(io.Writer, Report) error` and `WriteMarkdown(io.Writer, Report)
 error` validate the report before writing and return any writer error. A
-failed write may leave partial output. An intermediate `Delta`, which has no
-resolved policy or decision, cannot be rendered as a report.
+failed write may leave partial output. Both writers use the finding records
+and component version changes from `Compare` without copying them for sorting.
+If you reorder either list, the writers sort a copy of that list and leave
+your report untouched. An intermediate `Delta`, which has no resolved policy
+or decision, cannot be rendered as a report.
 
 I/O and JSON syntax errors preserve their underlying types for `errors.Is`
 and `errors.As`. Semantic validation errors have descriptive messages, but

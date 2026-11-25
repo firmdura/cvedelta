@@ -113,6 +113,30 @@ func TestCanonicalOrderWithoutMutation(t *testing.T) {
 	}
 }
 
+func TestPrepareReusesOrderedLists(t *testing.T) {
+	for _, reversed := range []string{"neither", "records", "versions"} {
+		t.Run(reversed, func(t *testing.T) {
+			r := load(t, "report-changes")
+			if reversed == "records" {
+				slices.Reverse(r.Records)
+			}
+			if reversed == "versions" {
+				slices.Reverse(r.ComponentVersionChanges)
+			}
+			got, err := prepare(r)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if copied := &got.Records[0] != &r.Records[0]; copied != (reversed == "records") {
+				t.Errorf("records copied: %t", copied)
+			}
+			if copied := &got.ComponentVersionChanges[0] != &r.ComponentVersionChanges[0]; copied != (reversed == "versions") {
+				t.Errorf("component version changes copied: %t", copied)
+			}
+		})
+	}
+}
+
 func TestInvalidReportsWriteNothing(t *testing.T) {
 	badUTF8 := string([]byte{0xff})
 	cases := []struct {

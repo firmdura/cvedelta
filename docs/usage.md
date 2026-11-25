@@ -13,7 +13,7 @@ files or comparing reports. The CI wrapper also prints help to stdout without
 replacing `dist/ci/report.json`.
 
 Run `cvedelta --version` to print the release version, for example
-`cvedelta v1.0.8`. It needs no input files, writes one line to stdout and exits
+`cvedelta v1.0.9`. It needs no input files, writes one line to stdout and exits
 0. Use this top-level option on its own; additional arguments are invalid.
 As with comparison output, a failed stdout write returns exit 2.
 
